@@ -18,3 +18,9 @@ export interface ProductResponse {
   skip: number
   limit: number
 }
+
+export interface Department {
+  id: string
+  label: string
+  categories: string[]
+}

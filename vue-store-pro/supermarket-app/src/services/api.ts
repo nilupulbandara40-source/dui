@@ -1,25 +1,73 @@
-import type { Product, ProductResponse } from '../types/product'
+import axios from 'axios'
+import type { Product, ProductResponse, Department } from '../types/product'
 
-const BASE_URL = 'https://dummyjson.com'
+const api = axios.create({
+  baseURL: 'https://dummyjson.com',
+})
 
-export async function fetchProducts(): Promise<Product[]> {
-  const response = await fetch(`${BASE_URL}/products?limit=24`)
+export const supermarketDepartments: Department[] = [
+  {
+    id: 'all',
+    label: 'All Departments',
+    categories: [
+      'groceries',
+      'beauty',
+      'fragrances',
+      'skin-care',
+      'kitchen-accessories',
+      'home-decoration',
+    ],
+  },
+  {
+    id: 'groceries',
+    label: 'Groceries',
+    categories: ['groceries'],
+  },
+  {
+    id: 'personal-care',
+    label: 'Personal Care',
+    categories: ['beauty', 'fragrances', 'skin-care'],
+  },
+  {
+    id: 'kitchen',
+    label: 'Kitchen',
+    categories: ['kitchen-accessories'],
+  },
+  {
+    id: 'home',
+    label: 'Home',
+    categories: ['home-decoration'],
+  },
+]
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch products')
-  }
-
-  const data: ProductResponse = await response.json()
-  return data.products
+export const getProductsByCategory = async (category: string): Promise<Product[]> => {
+  const response = await api.get<ProductResponse>(`/products/category/${category}?limit=50`)
+  return response.data.products
 }
 
-export async function fetchProductById(id: number): Promise<Product> {
-  const response = await fetch(`${BASE_URL}/products/${id}`)
+export const getDepartmentProducts = async (departmentId: string): Promise<Product[]> => {
+  const department = supermarketDepartments.find((item) => item.id === departmentId)
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch product details')
+  if (!department) {
+    return []
   }
 
-  const data: Product = await response.json()
-  return data
+  const responses = await Promise.all(
+    department.categories.map((category) => getProductsByCategory(category)),
+  )
+
+  const merged = responses.flat()
+
+  return merged.filter(
+    (product, index, array) =>
+      array.findIndex((item) => item.id === product.id) === index,
+  )
+}
+
+export const getFeaturedDeals = async (): Promise<Product[]> => {
+  const allProducts = await getDepartmentProducts('all')
+
+  return [...allProducts]
+    .sort((a, b) => b.discountPercentage - a.discountPercentage)
+    .slice(0, 6)
 }
