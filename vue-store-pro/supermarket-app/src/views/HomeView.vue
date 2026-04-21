@@ -3,7 +3,6 @@ import { computed, onMounted, ref } from 'vue'
 import DepartmentChips from '../components/DepartmentChips.vue'
 import FilterPanel from '../components/FilterPanel.vue'
 import HeroBanner from '../components/HeroBanner.vue'
-import NavBar from '../components/NavBar.vue'
 import ProductCard from '../components/ProductCard.vue'
 import PromoStrip from '../components/PromoStrip.vue'
 import { getDepartmentProducts, supermarketDepartments } from '../services/api'
@@ -17,14 +16,12 @@ const selectedDepartment = ref<string>('all')
 const searchTerm = ref<string>('')
 const sortBy = ref<string>('featured')
 
-const normalizeText = (value: string): string => {
-  return value.toLowerCase().trim()
-}
+const normalizeText = (value: string): string => value.toLowerCase().trim()
 
 const filteredProducts = computed(() => {
   const keyword = normalizeText(searchTerm.value)
 
-  let result = [...allProducts.value].filter((product) => {
+  const result = [...allProducts.value].filter((product) => {
     if (!keyword) return true
 
     const title = normalizeText(product.title)
@@ -61,17 +58,10 @@ const filteredProducts = computed(() => {
   return result
 })
 
-const featuredDeals = computed(() => {
-  return [...filteredProducts.value]
-    .sort((a, b) => b.discountPercentage - a.discountPercentage)
-    .slice(0, 6)
-})
+const featuredDeals = computed(() => [...filteredProducts.value].sort((a, b) => b.discountPercentage - a.discountPercentage).slice(0, 6))
 
 const selectedDepartmentLabel = computed(() => {
-  return (
-    supermarketDepartments.find((item) => item.id === selectedDepartment.value)?.label ||
-    'All Departments'
-  )
+  return supermarketDepartments.find((item) => item.id === selectedDepartment.value)?.label || 'All Departments'
 })
 
 const loadProducts = async (departmentId: string): Promise<void> => {
@@ -99,8 +89,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50">
-    <NavBar />
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950">
     <HeroBanner />
     <PromoStrip />
 
@@ -124,27 +113,27 @@ onMounted(async () => {
 
       <div v-if="loading" class="py-16 text-center">
         <div class="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600"></div>
-        <p class="mt-4 text-sm font-medium text-slate-600">Loading products...</p>
+        <p class="mt-4 text-sm font-medium text-slate-600 dark:text-slate-300">Loading products...</p>
       </div>
 
       <div
         v-else-if="error"
-        class="rounded-3xl border border-red-200 bg-red-50 p-6 text-center"
+        class="rounded-3xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-900 dark:bg-red-950/30"
       >
-        <p class="font-semibold text-red-600">{{ error }}</p>
+        <p class="font-semibold text-red-600 dark:text-red-300">{{ error }}</p>
       </div>
 
       <template v-else>
         <section id="deals" class="mb-10">
-          <div class="mb-5 flex items-center justify-between">
+          <div class="mb-5 flex items-center justify-between gap-3">
             <div>
-              <h2 class="text-2xl font-extrabold text-slate-900">Featured Deals</h2>
-              <p class="text-sm text-slate-600">
+              <h2 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Featured Deals</h2>
+              <p class="text-sm text-slate-600 dark:text-slate-300">
                 Best discounts in {{ selectedDepartmentLabel }}
               </p>
             </div>
 
-            <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
+            <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
               Weekly Offers
             </span>
           </div>
@@ -162,10 +151,10 @@ onMounted(async () => {
 
           <div
             v-else
-            class="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm"
+            class="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900"
           >
-            <h3 class="text-lg font-bold text-slate-900">No featured deals found</h3>
-            <p class="mt-2 text-sm text-slate-600">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">No featured deals found</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
               Try another keyword.
             </p>
           </div>
@@ -174,26 +163,26 @@ onMounted(async () => {
         <section id="catalog">
           <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 class="text-2xl font-extrabold text-slate-900">Supermarket Products</h2>
-              <p class="text-sm text-slate-600">
+              <h2 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Supermarket Products</h2>
+              <p class="text-sm text-slate-600 dark:text-slate-300">
                 Showing {{ filteredProducts.length }} items in
-                <span class="font-bold text-emerald-700">
+                <span class="font-bold text-emerald-700 dark:text-emerald-300">
                   {{ selectedDepartmentLabel }}
                 </span>
               </p>
             </div>
 
-            <div class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
+            <div class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
               Professional supermarket interface
             </div>
           </div>
 
           <div
             v-if="filteredProducts.length === 0"
-            class="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm"
+            class="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900"
           >
-            <h3 class="text-lg font-bold text-slate-900">No matching products found</h3>
-            <p class="mt-2 text-sm text-slate-600">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">No matching products found</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
               Try a different search term.
             </p>
           </div>

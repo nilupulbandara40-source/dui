@@ -24,3 +24,7 @@ export interface Department {
   label: string
   categories: string[]
 }
+
+export interface CartItem extends Product {
+  quantity: number
+}

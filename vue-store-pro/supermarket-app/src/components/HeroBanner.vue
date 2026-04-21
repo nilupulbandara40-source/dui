@@ -12,12 +12,12 @@
         </span>
 
         <h2 class="mt-6 text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
-          A professional supermarket layout for your mini project
+          FreshMart Pro supermarket experience with cart and dark mode
         </h2>
 
         <p class="mt-5 max-w-xl text-sm leading-7 text-white/90 sm:text-base">
           Browse supermarket-style products with a cleaner layout, better interaction,
-          and a more realistic department-based shopping experience.
+          a persistent shopping cart, dynamic routing, and a polished dark mode.
         </p>
 
         <div class="mt-8 flex flex-wrap gap-4">
@@ -57,8 +57,8 @@
             class="h-44 w-full rounded-2xl object-cover"
           />
           <div class="mt-4">
-            <p class="text-sm font-bold text-slate-900">Interactive layout</p>
-            <p class="text-xs text-slate-500">Different from normal projects</p>
+            <p class="text-sm font-bold text-slate-900">Professional layout</p>
+            <p class="text-xs text-slate-500">Stronger UI for better marks</p>
           </div>
         </div>
       </div>
